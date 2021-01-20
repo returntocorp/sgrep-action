@@ -1,0 +1,14 @@
+python.lang.best-practice.arbitrary-sleep
+     > python/lang/best-practice/sleep.py:12
+     ╷
+   12│   t.sleep(5)
+     ╵
+     = time.sleep() call; did you mean to leave this in?
+
+python.lang.best-practice.arbitrary-sleep
+     > python/lang/best-practice/sleep.py:14
+     ╷
+   14│   t.sleep(0.1)
+     ╵
+     = time.sleep() call; did you mean to leave this in?
+

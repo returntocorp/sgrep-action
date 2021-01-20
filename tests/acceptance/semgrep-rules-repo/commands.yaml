@@ -37,3 +37,25 @@ steps:
     expected_err: local-config-some-new-results-gitlab-json.err
     expected_out: local-config-some-new-results-gitlab-json.out
     returncode: 1
+  - name: wrong-semgrep-opts
+    description: expected failure because of wrong semgrep-opts
+    command:
+    - semgrep-agent
+    - --config
+    - python/lang/best-practice/sleep.yaml
+    - --semgrep-opts
+    - --test
+    expected_err: wrong-semgrep-opts.err
+    expected_out: null
+    returncode: 1
+  - name: innocuous-semgrep-opts
+    description: expected findings even with these semgrep-opts
+    command:
+    - semgrep-agent
+    - --config
+    - python/lang/best-practice/sleep.yaml
+    - --semgrep-opts
+    - --timeout 120 -j 2
+    expected_err: innocuous-semgrep-opts.err
+    expected_out: innocuous-semgrep-opts.out
+    returncode: 1

@@ -27,6 +27,8 @@ REPO_ROOT = str(Path(__file__).parent.parent.parent.resolve())
 BRANCH_COMMIT = re.compile(r"^(commit|\|   \*) ([0-9a-f]+)")
 DATE_STR = re.compile(r"Date:   (.*)")
 PYTHON_VERSION = re.compile(r"(?<=on Python )(\d+\.\d+\.\d+)")
+SEMGREP_BIN_PATH = re.compile(r"/.+?bin/semgrep")
+TRACEBACK_PATH = re.compile(r'(File ")/.+?(/site-packages/.+?.py", line \d+?, in .+$)')
 
 PIPE_OUTPUT: Mapping[str, Callable[[subprocess.CompletedProcess], str]] = {
     "expected_out": lambda r: cast(str, r.stdout),
@@ -43,6 +45,8 @@ SUBSTITUTIONS: Sequence[Callable[[str], str]] = [
     lambda s: re.sub(BRANCH_COMMIT, r"\1", s),
     lambda s: re.sub(DATE_STR, r"Date:   ", s),
     lambda s: re.sub(PYTHON_VERSION, "", s),
+    lambda s: re.sub(SEMGREP_BIN_PATH, "/path/to/semgrep", s),
+    lambda s: re.sub(TRACEBACK_PATH, r"\1...\2", s),
     lambda s: s.rstrip(),
 ]
 

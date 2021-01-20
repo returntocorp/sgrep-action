@@ -12,6 +12,7 @@ from typing import List
 from typing import NoReturn
 from typing import Optional
 from typing import TYPE_CHECKING
+from typing import Union
 
 import click
 import git as gitpython
@@ -23,6 +24,7 @@ from semgrep_agent import constants
 
 if TYPE_CHECKING:
     from semgrep_agent.meta import GitMeta
+    from semgrep_agent.semgrep import SemgrepCommandFailure
 
 
 def debug_echo(text: str) -> None:
@@ -118,7 +120,17 @@ def fix_head_for_github(
             git.checkout([stashed_rev])
 
 
-def exit_with_sh_error(error: sh.ErrorReturnCode) -> NoReturn:
+SH_ERROR_NEXT_STEPS = (
+    "This is an internal error, please file an issue at "
+    "https://github.com/returntocorp/semgrep-action/issues/new/choose "
+    "and include any log output from above."
+)
+
+
+def exit_with_sh_error(  # type: ignore
+    error: Union[sh.ErrorReturnCode, "SemgrepCommandFailure"],
+    next_steps: str = SH_ERROR_NEXT_STEPS,
+) -> NoReturn:
     message = f"""
     === failed command's STDOUT:
 
@@ -130,8 +142,7 @@ def exit_with_sh_error(error: sh.ErrorReturnCode) -> NoReturn:
 
     === [ERROR] `{error.full_cmd}` failed with exit code {error.exit_code}
 
-    This is an internal error, please file an issue at https://github.com/returntocorp/semgrep-action/issues/new/choose
-    and include any log output from above.
+    {next_steps}
     """
     message = dedent(message).strip()
     click.echo("", err=True)

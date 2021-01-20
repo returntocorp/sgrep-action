@@ -1,4 +1,4 @@
-from typing import Any, Callable, Union
+from typing import Any, Callable, Sequence, Union
 
 class ErrorReturnCode(Exception):
     @property
@@ -31,6 +31,7 @@ class Command(GitSubcommandsMixin):
     def bake(self, *args: Any, **kwargs: Any) -> Command: ...
 
 class RunningCommand(str, GitSubcommandsMixin):
+    cmd: Sequence[bytes]
     @property
     def stdout(self) -> bytes: ...
     @property

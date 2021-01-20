@@ -1,0 +1,18 @@
+| versions          - semgrep 0.37.0 on Python
+Note that no baseline-ref was passed and detected environment is not Github or Gitlab to will default to perfoming a full scan. If you want semgrep to only report on new findings from a pull request please set baseline-ref
+| environment       - running in environment git, triggering event is 'unknown'
+| manage            - not logged in
+=== setting up agent configuration
+| using semgrep rules from python/lang/best-practice/sleep.yaml
+| using default path ignore rules of common test and dependency directories
+| found 1476 files in the paths to be scanned
+| skipping 3 files based on path ignore rules
+=== looking for current issues in 1473 files
+| 2 current issues found
+| No ignored issues found
+| 2 current issues found
+| No ignored issues found
+| 2 current issues found
+| No ignored issues found
+=== not looking at pre-existing issues since all files with current issues are newly created
+=== exiting with failing status
