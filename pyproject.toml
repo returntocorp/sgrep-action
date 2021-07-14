@@ -18,11 +18,12 @@ glom = "^20.8.0"
 pymmh3 = "^0.0.5"
 attrs = ">=20.3,<22.0"
 GitPython = "^3.1.11"
-"ruamel.yaml" = "^0.16.12"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
 jsonschema = "^3.2.0"
+types-PyYAML = "^5.4.1"
 
 [tool.poetry.scripts]
 semgrep-agent = "semgrep_agent.__main__:error_guard"

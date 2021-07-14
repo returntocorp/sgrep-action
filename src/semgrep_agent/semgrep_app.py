@@ -13,7 +13,6 @@ import click
 import requests
 from glom import glom
 from glom import T
-from ruamel.yaml import YAML  # type: ignore
 from urllib3.util.retry import Retry
 
 from semgrep_agent import constants
@@ -23,6 +22,7 @@ from semgrep_agent.semgrep import Results
 from semgrep_agent.semgrep import SemgrepError
 from semgrep_agent.utils import debug_echo
 from semgrep_agent.utils import validate_publish_token
+from semgrep_agent.yaml import yaml
 
 # 4, 8, 16 seconds
 RETRYING_ADAPTER = requests.adapters.HTTPAdapter(
@@ -33,8 +33,6 @@ RETRYING_ADAPTER = requests.adapters.HTTPAdapter(
         status_forcelist=(413, 429, 500, 502, 503),
     ),
 )
-
-yaml = YAML(typ="rt")
 
 
 @dataclass

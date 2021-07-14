@@ -13,8 +13,8 @@ from typing import Mapping
 from typing import Optional
 from typing import Sequence
 
+import yaml
 from _pytest.python import Metafunc
-from ruamel import yaml
 
 ALL_TESTS = [
     d.name
