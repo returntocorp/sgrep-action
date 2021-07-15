@@ -1,0 +1,9 @@
+python.lang.correctness.useless-eqeq.useless-eqeq
+     > bar.py:1
+     ╷
+    1│   2 == 2
+     ╵
+     = This expression is always True: `2 == 2` or `2 != 2`. If testing for
+       floating point NaN, use `math.isnan(2)`, or `cmath.isnan(2)` if the
+       number is complex.
+

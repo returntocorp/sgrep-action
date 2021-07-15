@@ -38,6 +38,9 @@ PIPE_OUTPUT: Mapping[str, Callable[[subprocess.CompletedProcess], str]] = {
 SYMLINK_SKIP_MSG = re.compile(
     r"Skipping .*bar/foo since it is a symlink to a directory: .*foo", re.MULTILINE
 )
+JSON_OUTPUT_COMMIT_DATE = re.compile(
+    r'"commit_date": "\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+]\d{2}:\d{2}"'
+)
 
 
 def write_expected_file(filename: str, output: str) -> None:
@@ -54,6 +57,11 @@ CLEANING_FUNCS: Sequence[Callable[[str], str]] = [
     lambda s: re.sub(
         SYMLINK_SKIP_MSG,
         "Skipping bar/foo since it is a symlink to a directory: foo",
+        s,
+    ),
+    lambda s: re.sub(
+        JSON_OUTPUT_COMMIT_DATE,
+        '"commit_date": "0000-00-00T00:00:00+00:00"',
         s,
     ),
 ]

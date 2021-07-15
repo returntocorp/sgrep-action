@@ -1,0 +1,93 @@
+steps:
+  - include: generic.yaml
+  # Tests .semgrepconfig.yml overrides
+  - name: new add
+    description: create a new file with findings
+    command:
+      - bash
+      - -c
+      - echo "2 == 2" > bar.py && git add bar.py && git commit -m 'add finding'
+
+  - name: no override
+    description: create an empty .semgrepconfig.yml
+    command:
+      - bash
+      - -c
+      - >-
+        echo "overrides: []" > .semgrepconfig.yml && git add .semgrepconfig.yml && git commit --amend --no-edit
+  - name: agent with no override
+    description: run agent on a single new file with no override
+    command: semgrep-agent --baseline-ref HEAD~1 --config p/r2c-ci
+    returncode: 1
+    expected_out: no-override.out
+    expected_err: no-override.err
+
+  - name: path override
+    description: create a .semgrepconfig.yml overriding by path
+    command:
+      - bash
+      - -c
+      - >-
+        echo "overrides: [{if.path: '*ba*.py*', mute: true}]" > .semgrepconfig.yml && git add .semgrepconfig.yml && git commit --amend --no-edit
+  - name: agent with path override
+    description: run agent on a single new file with path override
+    command: semgrep-agent --baseline-ref HEAD~1 --config p/r2c-ci
+    returncode: 0
+    expected_out: if-path-override.out
+    expected_err: if-path-override.err
+
+  - name: rule ID override
+    description: create a .semgrepconfig.yml overriding by rule ID
+    command:
+      - bash
+      - -c
+      - >-
+        echo "overrides: [{if.rule_id: '*eqeq*', mute: true}]" > .semgrepconfig.yml && git add .semgrepconfig.yml && git commit --amend --no-edit
+  - name: agent with rule id override
+    description: run agent on a single new file with rule id override
+    command: semgrep-agent --baseline-ref HEAD~1 --config p/r2c-ci
+    returncode: 0
+    expected_out: if-rule-id-override.out
+    expected_err: if-rule-id-override.err
+
+  - name: finding ID override
+    description: create a .semgrepconfig.yml overriding by finding ID
+    command:
+      - bash
+      - -c
+      - >-
+        echo "overrides: [{if.finding_id: 'a179ed11', mute: true}]" > .semgrepconfig.yml && git add .semgrepconfig.yml && git commit --amend --no-edit
+  - name: agent with finding id override
+    description: run agent on a single new file with finding id override
+    command: semgrep-agent --baseline-ref HEAD~1 --config p/r2c-ci
+    returncode: 0
+    expected_out: if-finding-id-override.out
+    expected_err: if-finding-id-override.err
+
+  - name: severity override
+    description: create a .semgrepconfig.yml overriding by severity
+    command:
+      - bash
+      - -c
+      - >-
+        echo "overrides: [{if.severity_in: [ERROR], mute: true}]" > .semgrepconfig.yml && git add .semgrepconfig.yml && git commit --amend --no-edit
+  - name: agent with severity override
+    description: run agent on a single new file with severity override
+    command: semgrep-agent --baseline-ref HEAD~1 --config p/r2c-ci
+    returncode: 0
+    expected_out: if-severity-override.out
+    expected_err: if-severity-override.err
+
+  - name: override severity
+    description: create a .semgrepconfig.yml overriding the severity
+    command:
+      - bash
+      - -c
+      - >-
+        echo "overrides: [{if.path: '*', set_severity: INFO}]" > .semgrepconfig.yml && git add .semgrepconfig.yml && git commit --amend --no-edit
+  - name: agent with overriding the severity
+    description: run agent on a single new file with overriding the severity
+    command: semgrep-agent --baseline-ref HEAD~1 --config p/r2c-ci --json
+    returncode: 1
+    expected_out: severity-action-override-json.out
+    expected_err: severity-action-override-json.err

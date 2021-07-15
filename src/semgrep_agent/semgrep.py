@@ -26,6 +26,7 @@ from sh.contrib import git
 from semgrep_agent.exc import ActionFailure
 from semgrep_agent.findings import Finding
 from semgrep_agent.findings import FindingSets
+from semgrep_agent.postprocessing import postprocess
 from semgrep_agent.targets import TargetFileManager
 from semgrep_agent.utils import debug_echo
 from semgrep_agent.utils import get_git_repo
@@ -283,6 +284,8 @@ def invoke_semgrep(
 
             output["results"].extend(parsed_output["results"])
             output["errors"].extend(parsed_output["errors"])
+
+    output["results"] = postprocess(output["results"])
 
     return output
 

@@ -112,6 +112,46 @@ docker run -v $(pwd):/src --workdir /src returntocorp/semgrep-agent:v1 semgrep-a
 > which can be changed to any value
 > that `semgrep` itself understands.
 
+## EXPERIMENTAL: `.semgrepconfig.yml` overrides
+
+You can add a `.semgrepconfig.yml` that looks like this:
+
+```yaml
+overrides:
+  - if.path: "tests/*" # the first two lines in this example are "conditions"
+    if.rule_id: "secrets.*aws*"
+    mute: true # this last line in this example is an "action"
+
+  - if.policy_slug: "*important*"
+    if.severity_in: ["ERROR"]
+    unmute: true # report issues even if they were muted with # nosemgrep
+    set_severity: WARNING # but lower their severity a bit
+```
+
+Every finding will be checked against these override definitions one by one.
+The override definitions will run in the same order you have them in your config file.
+
+An override's actions are applied when all `if.` conditions are true. If an override applies, it'll take actions as described by keys not starting with `if.*`.
+
+### Available conditions
+
+| key              | example value         | `True` if the finding's…                        |
+| ---------------- | --------------------- | ----------------------------------------------- |
+| `if.path`        | `"tests/*"`           | path matches the given glob                     |
+| `if.rule_id`     | `"secrets.*aws*"`     | rule ID matches the given glob                  |
+| `if.ruleset_id`  | `"secrets"`           | rule is from a ruleset matching the given glob  |
+| `if.finding_id`  | `"1fd8aac00"`         | finding's `syntactic_id` starts with this value |
+| `if.policy_slug` | `"security*"`         | rule is from a policy matching the given glob   |
+| `if.severity_in` | `["INFO", "WARNING"]` | rule's severity is in the given list            |
+
+### Available actions
+
+| key            | example value | description                                     |
+| -------------- | ------------- | ----------------------------------------------- |
+| `mute`         | `true`        | acts as if the line had a `# nosemgrep` comment |
+| `unmute`       | `true`        | ignores any `# nosemgrep` comments              |
+| `set_severity` | `"INFO"`      | changes the reported severity of the issue      |
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
